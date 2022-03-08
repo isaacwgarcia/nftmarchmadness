@@ -11,12 +11,15 @@ export default function Home() {
 
   async function callSequence() {
     console.log("callSequence");
-    const network = "polygon";
+    const network = "rinkeby";
     const wallet = new sequence.Wallet(network);
     console.log("Connecting");
     if (!wallet.isConnected()) {
       console.log("NOT CONNECTED");
-      const connectDetails = await wallet.connect();
+      const connectDetails = await wallet.connect({
+        app: "NFTMarchMadness",
+        authorize: true, // <---<<< this will automatically sign+verify a EIP712 message when user clicks "Connect"
+      });
       if (connectDetails.connected) setLogged(true);
     } else {
       console.log("ALREADY CONNECTED");

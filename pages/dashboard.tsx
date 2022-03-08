@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box } from "@mui/material";
 import { sequence } from "0xsequence";
 import { useRouter } from "next/router";
 
 export default function Dashboard() {
-  const wallet = new sequence.Wallet("polygon");
+  const wallet = new sequence.Wallet("rinkeby");
   const isConnected = wallet.isConnected();
   const router = useRouter();
   async function handleLogout() {

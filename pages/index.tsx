@@ -1,37 +1,34 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { Box } from "@mui/material";
-import { sequence } from "0xsequence";
+
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { getWalletState } from "../components/Wallet";
 
 export default function Home() {
   const [logged, setLogged] = useState(false);
   const router = useRouter();
 
   async function callSequence() {
-    console.log("callSequence");
-    const network = "rinkeby";
-    const wallet = new sequence.Wallet(network);
-    console.log("Connecting");
+    const wallet = await getWalletState();
+
     if (!wallet.isConnected()) {
-      console.log("NOT CONNECTED");
-      const connectDetails = await wallet.connect({
-        app: "NFTMarchMadness",
-        authorize: true, // <---<<< this will automatically sign+verify a EIP712 message when user clicks "Connect"
-      });
-      if (connectDetails.connected) setLogged(true);
+      const connectDetails = await wallet.connect();
+      if (connectDetails.connected) {
+        console.log("Connected Details 9999", connectDetails);
+        router.push("/dashboard");
+      }
     } else {
-      console.log("ALREADY CONNECTED");
       router.push("/dashboard");
-      //wallet.openWallet();
     }
   }
+
   if (logged) router.push("/dashboard");
   return (
     <div className={styles.container}>
       <Head>
-        <title> Mint your NFT March Madness</title>
+        <title>Mint your NFT March Madness Bracket</title>
         <meta name="description" content="Created by isaaacwgarcia" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -39,7 +36,7 @@ export default function Home() {
         <main className={styles.main}>
           <h1 className={styles.title}>
             Mint your NFT
-            <br /> March Madness
+            <br /> March Madness Bracket
           </h1>
 
           <div className={styles.grid}>

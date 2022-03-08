@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { Wallet } from "0xsequence";
+import { ethers } from "ethers";
+import { connect } from "@textile/tableland";
+import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 import { getWalletState } from "../components/Wallet";
 import { NetworkConfig } from "0xsequence/dist/declarations/src/network";
-
+import { Modal, Button, Text, Input, Link } from "@nextui-org/react";
 interface Profile {
   network: string;
   address: string;
@@ -13,15 +16,46 @@ interface Profile {
 
 export default function Dashboard() {
   const router = useRouter();
-
+  const [visible, setVisible] = React.useState(false);
+  const handler = () => setVisible(true);
+  const closeHandler = () => {
+    setVisible(false);
+    console.log("closed");
+    console.log("ITEM NAME", item.name);
+  };
   const [wallet, setWallet] = useState<Wallet>();
   const [isConnected, setIsConnected] = useState(true);
+  const updateField = (e) => {
+    setItem({
+      ...item,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const [item, setItem] = useState({
+    name: "",
+  });
+
   const [user, setUser] = useState<Profile>({
     network: "",
     address: "",
     balance: "",
   });
 
+  async function createTable(name) {
+    const providerOptions = {};
+    console.log("Create Table with Name ? ", name);
+    const web3Modal = new Web3Modal({
+      cacheProvider: true,
+      providerOptions,
+    });
+    const connection = await web3Modal.connect(); //Will open MetaMask
+    /*  const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner(); //Verifies signer
+    let nameTable = "";
+    const tbl = await connect({ network: "testnet", signer });
+    console.log("TOKEN>>", tbl.token); */
+  }
   async function getStatus() {
     let data: Profile = {
       network: "",
@@ -84,20 +118,97 @@ export default function Dashboard() {
       alignItems="center"
       bgcolor="black"
     >
-      <Box height="50vh" width="100%" display="flex" flexDirection="column">
-        <h1>DashBoard</h1>
-        <div> {user?.address}</div>
-        <div> Connected to: {user?.network}</div>
-        <div> Balance: {user?.balance}</div>
+      <Box display="flex" flexDirection="row" width="100%">
+        <Box
+          height="50vh"
+          width="60%"
+          display="flex"
+          flexDirection="column"
+          sx={{ mx: "10%" }}
+        >
+          <h1>DashBoard</h1>
+          <div> {user?.address}</div>
+          <div> Connected to: {user?.network}</div>
+          <div> Balance: {user?.balance}</div> <br />
+          <br />
+          <div>
+            <br />
+            <Button auto shadow onClick={handler}>
+              Mint your bracket
+            </Button>
+            <Modal
+              closeButton
+              aria-labelledby="modal-title"
+              open={visible}
+              onClose={closeHandler}
+            >
+              <Modal.Header>
+                <Text id="modal-title" size={18}>
+                  <Text b size={18}>
+                    CREATE YOUR BRACKER
+                  </Text>
+                  <br />
+                  Set up multiple brackets and make picks.
+                </Text>
+              </Modal.Header>
+              <Modal.Body>
+                <Input
+                  clearable
+                  bordered
+                  fullWidth
+                  color="primary"
+                  size="lg"
+                  placeholder="Name"
+                  name="name"
+                  id="name"
+                  value={item.name || ""}
+                  onChange={updateField}
+                />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button auto flat color="error" onClick={closeHandler}>
+                  Close
+                </Button>
+                <Button
+                  auto
+                  onClick={() => {
+                    createTable(item.name);
+                  }}
+                >
+                  Proceed
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          </div>
+        </Box>
+        <Box
+          height="50vh"
+          width="100%"
+          display="flex"
+          flexDirection="column"
+          alignContent="left"
+          sx={{ mx: "5rem" }}
+        >
+          {/*  MAP aqui los elementos asociados  */}
+          <Link block color="primary" href="#">
+            First Bracket
+          </Link>
+        </Box>
       </Box>
+      <br />
+      <br />
+      <br />
 
-      <button
+      <Button
+        color="gradient"
+        auto
+        shadow
         onClick={() => {
           handleLogout();
         }}
       >
         LogOut
-      </button>
+      </Button>
     </Box>
   ) : (
     <></>

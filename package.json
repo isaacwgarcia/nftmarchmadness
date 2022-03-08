@@ -11,10 +11,15 @@
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.5.0",
+    "@nextui-org/react": "^1.0.2-beta.4",
+    "@textile/tableland": "^0.1.2",
+    "@walletconnect/web3-provider": "^1.7.4",
     "0xsequence": "^0.36.4",
+    "ethers": "^5.5.4",
     "next": "12.1.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "web3modal": "^1.9.5"
   },
   "devDependencies": {
     "eslint": "8.10.0",

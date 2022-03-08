@@ -1,8 +1,30 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { Box } from "@mui/material";
+import { sequence } from "0xsequence";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const [logged, setLogged] = useState(false);
+  const router = useRouter();
+
+  async function callSequence() {
+    console.log("callSequence");
+    const network = "polygon";
+    const wallet = new sequence.Wallet(network);
+    console.log("Connecting");
+    if (!wallet.isConnected()) {
+      console.log("NOT CONNECTED");
+      const connectDetails = await wallet.connect();
+      if (connectDetails.connected) setLogged(true);
+    } else {
+      console.log("ALREADY CONNECTED");
+      router.push("/dashboard");
+      //wallet.openWallet();
+    }
+  }
+  if (logged) router.push("/dashboard");
   return (
     <div className={styles.container}>
       <Head>
@@ -18,7 +40,12 @@ export default function Home() {
           </h1>
 
           <div className={styles.grid}>
-            <button className={styles.card} onClick={() => {}}>
+            <button
+              className={styles.card}
+              onClick={() => {
+                callSequence();
+              }}
+            >
               <Box display="flex" flexDirection="column">
                 <h2>Login &rarr;</h2>
                 <p>Try it out.</p>

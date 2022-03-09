@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { Wallet } from "0xsequence";
-import { ethers } from "ethers";
-import { connect } from "@textile/tableland";
-import Web3Modal from "web3modal";
-import { useRouter } from "next/router";
 import { getWalletState } from "../components/Wallet";
+import { useRouter } from "next/router";
+
 import { NetworkConfig } from "0xsequence/dist/declarations/src/network";
 import { Modal, Button, Text, Input, Link } from "@nextui-org/react";
+import { getToken } from "../components/lib/ops";
 interface Profile {
   network: string;
   address: string;
@@ -44,17 +43,8 @@ export default function Dashboard() {
 
   async function createTable(name) {
     const providerOptions = {};
-    console.log("Create Table with Name ? ", name);
-    const web3Modal = new Web3Modal({
-      cacheProvider: true,
-      providerOptions,
-    });
-    const connection = await web3Modal.connect(); //Will open MetaMask
-    /*  const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner(); //Verifies signer
-    let nameTable = "";
-    const tbl = await connect({ network: "testnet", signer });
-    console.log("TOKEN>>", tbl.token); */
+    const token = await getToken();
+    console.log("Create Table with Name ? ", name, " and Token > ", token);
   }
   async function getStatus() {
     let data: Profile = {
@@ -85,7 +75,6 @@ export default function Dashboard() {
           await provider!.getBalance(account)
         ).toString();
 
-        //console.log("123124124141 ", account, balanceChk1, chain);
         data.address = account;
         data.balance = balanceChk1;
         data.network = chain;

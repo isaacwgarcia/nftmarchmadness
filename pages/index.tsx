@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { getWalletState } from "../components/Wallet";
+import Image from "next/image";
 
 export default function Home() {
   const [logged, setLogged] = useState(false);
@@ -34,10 +35,13 @@ export default function Home() {
       </Head>
       <Box height="85vh">
         <main className={styles.main}>
-          <h1 className={styles.title}>
+          <Box>
+            <Image src={"/images/logo.png"} width={355} height={250} />
+          </Box>
+          <h3 className={styles.title}>
             Mint your NFT
             <br /> March Madness Bracket
-          </h1>
+          </h3>
 
           <div className={styles.grid}>
             <button
@@ -60,7 +64,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Created by @isaacwgarcia
+          Created by @isaacwgarcia for BuildQuest Hackaton 2022
         </a>
       </footer>
     </div>

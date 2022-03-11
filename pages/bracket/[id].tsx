@@ -23,7 +23,6 @@ function customBracket(bracketId: any) {
 export async function getStaticPaths() {
   return {
     paths: [{ params: { id: "1" } }],
-    fallback: true,
   };
 }
 

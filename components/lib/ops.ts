@@ -3,6 +3,7 @@ import { getWalletState } from "../Wallet";
 import { create } from "ipfs-http-client";
 //import { teams } from "./data/teams";
 import { initialData } from "../../components/lib/data/structure";
+import Match from "@g-loot/react-tournament-brackets/dist/src/components/match";
 
 const newLocal = process.env.INFURA_IPFS;
 const IPFS_CLIENT = create({
@@ -55,7 +56,7 @@ export async function getDataFromIPFS(url) {
 
 export async function loadTeams() {
   const dataFromIPFS = await getDataFromIPFS(process.env.URL_TEAMS_IPFS);
-
+  console.log("dataFromIPFS > ", dataFromIPFS);
   template.forEach((res) => {
     res.participants.map((res) => {
       dataFromIPFS.forEach((team) => {
@@ -63,6 +64,7 @@ export async function loadTeams() {
       });
     });
   });
+  console.log("Data to render > ", template);
 }
 
 export async function connectTableLand(): Promise<Connection> {

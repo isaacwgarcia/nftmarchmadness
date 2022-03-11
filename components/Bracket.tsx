@@ -2,10 +2,15 @@ import {
   SingleEliminationBracket,
   SVGViewer,
 } from "@g-loot/react-tournament-brackets";
+import { useEffect } from "react";
 
 import { initialData } from "./lib/data/structure";
+import { loadTeams } from "./lib/ops";
 
 export default function Bracket() {
+  useEffect(() => {
+    loadTeams();
+  }, []);
   return (
     <>
       <SingleEliminationBracket

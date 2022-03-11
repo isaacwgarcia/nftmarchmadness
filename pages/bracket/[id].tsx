@@ -1,5 +1,4 @@
 import React from "react";
-import { loadTeams } from "../../components/lib/ops";
 import dynamic from "next/dynamic";
 
 const Bracket = dynamic(
@@ -10,7 +9,6 @@ const Bracket = dynamic(
 );
 
 function customBracket(bracketId: any) {
-  loadTeams();
   return (
     <>
       <div>
@@ -23,7 +21,7 @@ function customBracket(bracketId: any) {
 export async function getStaticPaths() {
   return {
     paths: [{ params: { id: "1" } }],
-    fallback: false,
+    fallback: true,
   };
 }
 
@@ -34,7 +32,7 @@ export const getStaticProps = async (context: any) => {
     props: {
       bracketId: bracketId,
     },
-    revalidate: 10, // In seconds
+    revalidate: 1, // In seconds
   };
 };
 

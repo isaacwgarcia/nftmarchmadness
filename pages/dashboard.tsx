@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 import { NetworkConfig } from "0xsequence/dist/declarations/src/network";
 import { Modal, Button, Text, Input, Link } from "@nextui-org/react";
-import { getToken } from "../components/lib/ops";
+
 interface Profile {
   network: string;
   address: string;
@@ -15,7 +15,7 @@ interface Profile {
 
 export default function Dashboard() {
   const router = useRouter();
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
   const handler = () => setVisible(true);
   const closeHandler = () => {
     setVisible(false);
@@ -33,6 +33,7 @@ export default function Dashboard() {
 
   const [item, setItem] = useState({
     name: "",
+    description: "",
   });
 
   const [user, setUser] = useState<Profile>({
@@ -41,11 +42,6 @@ export default function Dashboard() {
     balance: "",
   });
 
-  async function createTable(name) {
-    const providerOptions = {};
-    const token = await getToken();
-    console.log("Create Table with Name ? ", name, " and Token > ", token);
-  }
   async function getStatus() {
     let data: Profile = {
       network: "",
@@ -153,17 +149,24 @@ export default function Dashboard() {
                   value={item.name || ""}
                   onChange={updateField}
                 />
+                <Input
+                  clearable
+                  bordered
+                  fullWidth
+                  color="primary"
+                  size="lg"
+                  placeholder="Description"
+                  name="description"
+                  id="description"
+                  value={item.description || ""}
+                  onChange={updateField}
+                />
               </Modal.Body>
               <Modal.Footer>
                 <Button auto flat color="error" onClick={closeHandler}>
                   Close
                 </Button>
-                <Button
-                  auto
-                  onClick={() => {
-                    createTable(item.name);
-                  }}
-                >
+                <Button auto onClick={() => {}}>
                   Proceed
                 </Button>
               </Modal.Footer>
@@ -178,7 +181,7 @@ export default function Dashboard() {
           alignContent="left"
           sx={{ mx: "5rem" }}
         >
-          {/*  MAP aqui los elementos asociados  */}
+          {/*  TODO: LOAD LIST OF BRACKETS */}
           <Link block color="primary" href="#">
             First Bracket
           </Link>

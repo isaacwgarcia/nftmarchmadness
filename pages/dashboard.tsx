@@ -3,9 +3,15 @@ import { Box } from "@mui/material";
 import { Wallet } from "0xsequence";
 import { getWalletState } from "../components/Wallet";
 import { useRouter } from "next/router";
-
+import { Loading, Link } from "@nextui-org/react";
+import { getRowsfromTable, initializeTableLand } from "../components/lib/ops";
 import { NetworkConfig } from "0xsequence/dist/declarations/src/network";
-import { Modal, Button, Text, Input, Link } from "@nextui-org/react";
+import { Modal, Button, Text, Input } from "@nextui-org/react";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
+import { connect } from "@textile/tableland";
+
+import { createBracket } from "../components/lib/ops";
 
 interface Profile {
   network: string;
@@ -14,8 +20,12 @@ interface Profile {
 }
 
 export default function Dashboard() {
+  const [userTable, setUserTable] = useState("");
   const router = useRouter();
   const [visible, setVisible] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [brackets, setBrackets] = useState([]);
+
   const handler = () => setVisible(true);
   const closeHandler = () => {
     setVisible(false);
@@ -23,6 +33,7 @@ export default function Dashboard() {
     console.log("ITEM NAME", item.name);
   };
   const [wallet, setWallet] = useState<Wallet>();
+  const [loading, setLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(true);
   const updateField = (e) => {
     setItem({
@@ -42,6 +53,8 @@ export default function Dashboard() {
     balance: "",
   });
 
+  const network =
+    user?.network.charAt(0).toUpperCase() + user?.network.slice(1);
   async function getStatus() {
     let data: Profile = {
       network: "",
@@ -87,6 +100,40 @@ export default function Dashboard() {
     router.push("/");
   }
 
+  async function createBracketHandler(name, description) {
+    const [jwt, userTable] = await listTablesHandler();
+    const res = await createBracket(jwt, name, description, userTable);
+    console.log("Resolution : ", res);
+  }
+
+  async function getRowsHandler() {
+    const [jwt, userTable] = await listTablesHandler();
+    getRowsfromTable(jwt, userTable).then((res) => {
+      console.log("Resolution getRowsHandler : ", res);
+      setBrackets(res as []);
+      setLoaded(true);
+    });
+  }
+
+  async function listTablesHandler(): Promise<[string, string]> {
+    //GET NAME OF LAST TABLE CREATED.
+
+    console.log("Inside listTablesHandler");
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect(); //Will open MetaMask
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner(); //Verifies signer
+    const tableLandConnection = await connect({ network: "testnet", signer });
+    console.log("JWT From TableLand>", tableLandConnection.token.token);
+    const jwt = tableLandConnection.token.token;
+    const list_Tables = await tableLandConnection.list();
+    const tableName = list_Tables[list_Tables.length - 1].name;
+    console.log("REs list_Tables >", list_Tables[list_Tables.length - 1].name); // For Testing purposes we will retrieve the last table created.
+    console.log("TOKEN ", jwt);
+
+    return [jwt, tableName];
+  }
+
   useEffect(() => {
     getStatus();
   }, []);
@@ -112,15 +159,40 @@ export default function Dashboard() {
           sx={{ mx: "10%" }}
         >
           <h1>DashBoard</h1>
-          <div> {user?.address}</div>
-          <div> Connected to: {user?.network}</div>
-          <div> Balance: {user?.balance}</div> <br />
+          <div>{user?.address}</div>
           <br />
+          <div> Connected to {network}</div>
+          <br />
+          <div> Balance: {user?.balance}</div> <br />
           <div>
             <br />
-            <Button auto shadow onClick={handler}>
-              Mint your bracket
-            </Button>
+            <div>
+              To play you will need to authorize 2 transactions:
+              <br />
+              <br />
+              1. To authenticate yourself. <br />
+              2. To mint the table that will hold your brackets.
+              <br />
+              <br />
+              <Button
+                shadow
+                auto
+                onClick={() => {
+                  initializeTableLand().then((res) => {
+                    console.log("Result Table 9999999", userTable);
+                    setUserTable(res);
+                  });
+
+                  setLoading(true);
+                }}
+              >
+                Start
+              </Button>
+              <br />
+              {loading && <Loading type="points" size="xl" />}
+              <br />
+            </div>
+
             <Modal
               closeButton
               aria-labelledby="modal-title"
@@ -130,7 +202,7 @@ export default function Dashboard() {
               <Modal.Header>
                 <Text id="modal-title" size={18}>
                   <Text b size={18}>
-                    CREATE YOUR BRACKER
+                    CREATE YOUR BRACKET
                   </Text>
                   <br />
                   Set up multiple brackets and make picks.
@@ -166,7 +238,17 @@ export default function Dashboard() {
                 <Button auto flat color="error" onClick={closeHandler}>
                   Close
                 </Button>
-                <Button auto onClick={() => {}}>
+                <Button
+                  auto
+                  onClick={() => {
+                    console.log("Just Clicked in Proceed");
+                    createBracketHandler(item.name, item.description).then(
+                      (res) => {
+                        closeHandler();
+                      }
+                    );
+                  }}
+                >
                   Proceed
                 </Button>
               </Modal.Footer>
@@ -182,9 +264,56 @@ export default function Dashboard() {
           sx={{ mx: "5rem" }}
         >
           {/*  TODO: LOAD LIST OF BRACKETS */}
-          <Link block color="primary" href="#">
-            First Bracket
-          </Link>
+          <Box>
+            <Button
+              disabled={false}
+              auto
+              shadow
+              onClick={() => {
+                console.log("SHOWING BRACKETS");
+                getRowsHandler();
+              }}
+            >
+              Show Brackets
+            </Button>
+            <br />
+            <br />
+            <Button
+              disabled={false}
+              auto
+              shadow
+              onClick={() => {
+                handler();
+              }}
+            >
+              Mint your bracket
+            </Button>
+          </Box>
+          <br /> <br />
+          {loaded ? (
+            <Box
+              height="100%"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              color="white"
+              bgcolor="black"
+            >
+              {brackets.map((bracket) => {
+                return (
+                  <div key={bracket[0]}>
+                    <Link block icon={true} color="primary">
+                      {bracket[1]}
+                    </Link>
+                    <br /> <br />
+                  </div>
+                );
+              })}
+            </Box>
+          ) : (
+            <></>
+          )}
         </Box>
       </Box>
       <br />
@@ -192,7 +321,7 @@ export default function Dashboard() {
       <br />
 
       <Button
-        color="gradient"
+        color="error"
         auto
         shadow
         onClick={() => {

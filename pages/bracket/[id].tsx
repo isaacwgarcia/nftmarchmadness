@@ -11,9 +11,7 @@ const Bracket = dynamic(
 function customBracket(bracketId: any) {
   return (
     <>
-      <div>
-        <Bracket />
-      </div>
+      <Bracket />
     </>
   );
 }

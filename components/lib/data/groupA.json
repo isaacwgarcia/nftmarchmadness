@@ -1,0 +1,19 @@
+{
+  "winnersA": [
+    { "gameId": "111", "teamId": "" },
+    { "gameId": "112", "teamId": "" },
+    { "gameId": "113", "teamId": "" },
+    { "gameId": "114", "teamId": "" },
+    { "gameId": "115", "teamId": "" },
+    { "gameId": "116", "teamId": "" },
+    { "gameId": "117", "teamId": "" },
+    { "gameId": "118", "teamId": "" },
+    { "gameId": "121", "teamId": "" },
+    { "gameId": "122", "teamId": "" },
+    { "gameId": "123", "teamId": "" },
+    { "gameId": "124", "teamId": "" },
+    { "gameId": "131", "teamId": "" },
+    { "gameId": "132", "teamId": "" },
+    { "gameId": "141", "teamId": "" }
+  ]
+}

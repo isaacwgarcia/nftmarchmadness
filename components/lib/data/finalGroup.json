@@ -2,12 +2,6 @@
   "finalFour": [
     { "gameId": "41", "teamId": "" },
     { "gameId": "42", "teamId": "" },
-    { "gameId": "43", "teamId": "" },
-    { "gameId": "44", "teamId": "" }
-  ],
-  "final": [
-    { "round": "final", "gameId": "finalA", "teamId": "" },
-    { "round": "final", "gameId": "finalB", "teamId": "" }
-  ],
-  "winner": { "id": "", "name": "" }
+    { "gameId": "51", "teamId": "" }
+  ]
 }

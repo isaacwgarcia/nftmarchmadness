@@ -2,7 +2,12 @@ import { connect, Connection, Token } from "@textile/tableland";
 import { getWalletState } from "../Wallet";
 import { create } from "ipfs-http-client";
 //import { teams } from "./data/teams";
-import { dataA } from "../../components/lib/data/structure";
+import {
+  dataA,
+  dataB,
+  dataC,
+  dataD,
+} from "../../components/lib/data/structure";
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import GROUPA from "../../components/lib/data/groupA.json";
@@ -16,7 +21,7 @@ const IPFS_CLIENT = create({
   url: newLocal,
 });
 
-const template = dataA;
+const templateA = dataA;
 
 /* 
 // TO UPLOAD JSON TO IPFS FOR THE FIRST TIME
@@ -63,14 +68,15 @@ export async function getDataFromIPFS(url) {
 export async function loadTeams() {
   const dataFromIPFS = await getDataFromIPFS(process.env.URL_TEAMS_IPFS);
   console.log("dataFromIPFS > ", dataFromIPFS);
-  template.forEach((res) => {
+  templateA.forEach((res) => {
     res.participants.map((res) => {
       dataFromIPFS.forEach((team) => {
-        if (team.id === parseInt(res.id)) res.name = team.name;
+        if (team.id === parseInt(res.id))
+          res.name = "ID " + res.id + " " + team.name;
       });
     });
   });
-  console.log("Data to render > ", template);
+  console.log("Data to render > ", templateA);
 }
 
 export async function connectTableLand(): Promise<Connection> {

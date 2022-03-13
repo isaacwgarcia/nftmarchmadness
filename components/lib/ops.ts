@@ -221,7 +221,6 @@ export async function createBracket(
   const groupD = GROUPD;
   const groupFinal = FINALGROUP;
 
-  //TODO ID CHANGE TO
   const query =
     "INSERT INTO " +
     userTable +
@@ -265,7 +264,7 @@ export async function createBracket(
       id: 1,
       params: [
         {
-          controller: address, //TODO GET ADDRESS FROM METAMASK
+          controller: address,
           statement: query,
         },
       ],
@@ -302,7 +301,7 @@ export async function getRowsfromTable(
 
   ///////////////////////
 
-  //TODO ID CHANGE TO
+  //TODO GET ID FOR DYNAMIC BRACKET
   const query = "SELECT ID, NAME FROM " + userTable + ";";
 
   console.log("Query > ", query);
@@ -328,7 +327,7 @@ export async function getRowsfromTable(
       id: 1,
       params: [
         {
-          controller: address, //TODO GET ADDRESS FROM METAMASK
+          controller: address,
           statement: query,
         },
       ],
@@ -336,7 +335,12 @@ export async function getRowsfromTable(
   });
 
   const jsonResult = await executeQuery.json();
-  const responseData = jsonResult.result.data.rows;
-  console.log("EXXXXXXX", responseData);
+  const responseData = jsonResult.result.data.rows as [];
+  responseData.forEach((r) => {
+    let pos = r as [string];
+    pos.push(userTable.toString());
+  });
+  console.log("Rows from TableLand", responseData);
+  //responseData.push(["table", userTable]);
   return responseData;
 }

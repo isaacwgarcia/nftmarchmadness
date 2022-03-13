@@ -78,7 +78,7 @@ export default function Bracket() {
             )}
           />
           <SingleEliminationBracket
-            matches={dataB} //////////////////// TODO GROUP B    ////////////////////
+            matches={dataB}
             matchComponent={Match}
             svgWrapper={({ children, ...props }) => (
               <SVGViewer
@@ -93,7 +93,7 @@ export default function Bracket() {
         </Box>
         <Box display="flex" flexDirection="row">
           <SingleEliminationBracket
-            matches={dataC} ////////////////////  TODO GROUP C    ////////////////////
+            matches={dataC}
             matchComponent={Match} //  :TODO ONCLICK SELECTION AND TITLES*/
             /* matchComponent={({
           match,
@@ -154,7 +154,7 @@ export default function Bracket() {
             )}
           />
           <SingleEliminationBracket
-            matches={dataD} ////////////////////  TODO GROUP D    ////////////////////
+            matches={dataD}
             matchComponent={Match}
             svgWrapper={({ children, ...props }) => (
               <SVGViewer
@@ -177,7 +177,7 @@ export default function Bracket() {
         alignItems="center"
       >
         <SingleEliminationBracket
-          matches={finalFour} ////////////////////  TODO GROUP D    ////////////////////
+          matches={finalFour}
           matchComponent={Match}
           svgWrapper={({ children, ...props }) => (
             <SVGViewer

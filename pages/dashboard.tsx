@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { Wallet } from "0xsequence";
 import { getWalletState } from "../components/Wallet";
-import { useRouter } from "next/router";
 import { Loading, Link } from "@nextui-org/react";
 import {
   getRowsfromTable,
@@ -16,6 +15,7 @@ import Web3Modal from "web3modal";
 import { connect } from "@textile/tableland";
 
 import { createBracket } from "../components/lib/ops";
+import { useRouter } from "next/router";
 
 interface Profile {
   network: string;
@@ -270,7 +270,6 @@ export default function Dashboard() {
           alignContent="left"
           sx={{ mx: "5rem" }}
         >
-          {/*  TODO: LOAD LIST OF BRACKETS */}
           <Box>
             <Button
               disabled={false}
@@ -322,9 +321,17 @@ export default function Dashboard() {
               {brackets.map((bracket) => {
                 return (
                   <div key={bracket[0]}>
-                    <Link block icon={true} color="primary">
+                    <Button
+                      color="primary"
+                      onClick={() => {
+                        //Dynamic Route with Table and ID
+                        router.push(
+                          "/bracket/" + bracket[2] + "-" + bracket[0]
+                        );
+                      }}
+                    >
                       {bracket[1]}
-                    </Link>
+                    </Button>
                     <br /> <br />
                   </div>
                 );

@@ -105,37 +105,40 @@ export default function Dashboard() {
   }
 
   async function createBracketHandler(name, description) {
-    const [jwt, userTable] = await listTablesHandler();
-    const res = await createBracket(jwt, name, description, userTable);
+    const [jwt, userTable, address] = await listTablesHandler();
+    const res = await createBracket(jwt, name, description, userTable, address);
     console.log("Resolution : ", res);
   }
 
   async function getRowsHandler() {
-    const [jwt, userTable] = await listTablesHandler();
-    getRowsfromTable(jwt, userTable).then((res) => {
+    const [jwt, userTable, address] = await listTablesHandler();
+    getRowsfromTable(jwt, userTable, address).then((res) => {
       console.log("Resolution getRowsHandler : ", res);
       setBrackets(res as []);
       setLoaded(true);
     });
   }
 
-  async function listTablesHandler(): Promise<[string, string]> {
-    //GET NAME OF LAST TABLE CREATED.
+  async function listTablesHandler(): Promise<[string, string, string]> {
+    //GETS THE NAME OF LAST TABLE CREATED.
 
     console.log("Inside listTablesHandler");
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect(); //Will open MetaMask
     const provider = new ethers.providers.Web3Provider(connection);
+
+    const accounts = await provider.listAccounts();
+    const address = accounts[0];
     const signer = provider.getSigner(); //Verifies signer
     const tableLandConnection = await connect({ network: "testnet", signer });
     console.log("JWT From TableLand>", tableLandConnection.token.token);
     const jwt = tableLandConnection.token.token;
     const list_Tables = await tableLandConnection.list();
     const tableName = list_Tables[list_Tables.length - 1].name;
-    console.log("REs list_Tables >", list_Tables[list_Tables.length - 1].name); // For Testing purposes we will retrieve the last table created.
+    console.log("list_Tables >", list_Tables[list_Tables.length - 1].name); // For Testing purposes we will retrieve the last table created.
     console.log("TOKEN ", jwt);
 
-    return [jwt, tableName];
+    return [jwt, tableName, address];
   }
 
   useEffect(() => {

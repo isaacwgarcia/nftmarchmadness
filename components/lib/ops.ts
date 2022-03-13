@@ -193,7 +193,8 @@ export async function createBracket(
   jwt: string,
   name: string,
   description: string,
-  userTable: string
+  userTable: string,
+  address: string
 ) {
   //CREATE A BRACKET CALL SIGN HERE TO GET JWT
   ////////////////////////////////////////////////
@@ -264,7 +265,7 @@ export async function createBracket(
       id: 1,
       params: [
         {
-          controller: "0xE7ab2D31396a89F91c4387ad88BBf94f590e8eB1", //TODO GET ADDRESS FROM METAMASK
+          controller: address, //TODO GET ADDRESS FROM METAMASK
           statement: query,
         },
       ],
@@ -277,7 +278,11 @@ export async function createBracket(
   return Promise.all(batches).then((content) => content.flat());
 }
 
-export async function getRowsfromTable(jwt: string, userTable: string) {
+export async function getRowsfromTable(
+  jwt: string,
+  userTable: string,
+  address: string
+) {
   //CREATE A BRACKET CALL SIGN HERE TO GET JWT
   ////////////////////////////////////////////////
   //TO DO RETRIEVE TABLE NAME PER USER
@@ -323,7 +328,7 @@ export async function getRowsfromTable(jwt: string, userTable: string) {
       id: 1,
       params: [
         {
-          controller: "0xE7ab2D31396a89F91c4387ad88BBf94f590e8eB1", //TODO GET ADDRESS FROM METAMASK
+          controller: address, //TODO GET ADDRESS FROM METAMASK
           statement: query,
         },
       ],

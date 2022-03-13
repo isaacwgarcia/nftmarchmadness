@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Box } from "@mui/material";
 import { Wallet } from "0xsequence";
 import { getWalletState } from "../components/Wallet";
@@ -6,7 +6,7 @@ import { Loading, Link } from "@nextui-org/react";
 import {
   getRowsfromTable,
   initializeTableLand,
-  loadJsonToIPFS,
+  loadJsonToIPFS, //initial loading
 } from "../components/lib/ops";
 import { NetworkConfig } from "0xsequence/dist/declarations/src/network";
 import { Modal, Button, Text, Input } from "@nextui-org/react";
@@ -16,6 +16,9 @@ import { connect } from "@textile/tableland";
 
 import { createBracket } from "../components/lib/ops";
 import { useRouter } from "next/router";
+import { AppContext } from "../components/State/context";
+import { loadSession } from "../components/State/reducer";
+import { Session } from "../components/lib/types";
 
 interface Profile {
   network: string;
@@ -24,6 +27,8 @@ interface Profile {
 }
 
 export default function Dashboard() {
+  const session = useContext(AppContext);
+  const { dispatch } = useContext(AppContext);
   const [userTable, setUserTable] = useState("");
   const router = useRouter();
   const [visible, setVisible] = useState(false);
@@ -110,9 +115,30 @@ export default function Dashboard() {
     console.log("Resolution : ", res);
   }
 
-  async function getRowsHandler() {
+  async function getSessionData() {
     const [jwt, userTable, address] = await listTablesHandler();
-    getRowsfromTable(jwt, userTable, address).then((res) => {
+    const _session: Session = {
+      // @ts-ignore: Object is possibly 'null'.
+      id: String(jwt),
+      // @ts-ignore: Object is possibly 'null'.
+
+      userTable: String(userTable),
+      // @ts-ignore: Object is possibly 'null'.
+
+      address: String(address),
+    };
+    console.log("CALLING CONTEXT LOAD SESSION WITH JWT >>>>>>>>>>>>", jwt);
+
+    dispatch(loadSession(_session));
+    return [jwt, userTable, address];
+  }
+  async function getRowsHandler() {
+    // const [jwt, userTable, address] = await listTablesHandler();
+    getRowsfromTable(
+      session.state.session?.id,
+      session.state.session?.userTable,
+      session.state.session?.address
+    ).then((res) => {
       console.log("Resolution getRowsHandler : ", res);
       setBrackets(res as []);
       setLoaded(true);
@@ -186,7 +212,7 @@ export default function Dashboard() {
                 auto
                 onClick={() => {
                   initializeTableLand().then((res) => {
-                    console.log("Result Table 9999999", userTable);
+                    console.log("Result Table > ", userTable);
                     setUserTable(res);
                   });
 
@@ -249,6 +275,7 @@ export default function Dashboard() {
                   auto
                   onClick={() => {
                     console.log("Just Clicked in Proceed");
+
                     createBracketHandler(item.name, item.description).then(
                       (res) => {
                         closeHandler();
@@ -277,6 +304,7 @@ export default function Dashboard() {
               shadow
               onClick={() => {
                 console.log("SHOWING BRACKETS");
+                getSessionData();
                 getRowsHandler();
               }}
             >
@@ -324,7 +352,6 @@ export default function Dashboard() {
                     <Button
                       color="primary"
                       onClick={() => {
-                        //Dynamic Route with Table and ID
                         router.push(
                           "/bracket/" + bracket[2] + "-" + bracket[0]
                         );

@@ -9,6 +9,8 @@ import GROUPB from "../../components/lib/data/groupB.json";
 import GROUPC from "../../components/lib/data/groupC.json";
 import GROUPD from "../../components/lib/data/groupD.json";
 import FINALGROUP from "../../components/lib/data/finalGroup.json";
+import { useContext } from "react";
+import { AppContext } from "../../components/State/context";
 
 import { BracketForm } from "../../components/BracketForm";
 
@@ -22,6 +24,7 @@ const Bracket = dynamic(
 );
 
 export default function CustomBracket(bracketId: any) {
+  const session = useContext(AppContext);
   const data: BracketData = { form_data: {} };
   const [formState, setFormState] = useState(data.form_data);
   const handleFormChanged = (value: Record<string, string>) => {
@@ -50,10 +53,26 @@ export default function CustomBracket(bracketId: any) {
           weight="bold"
         >
           SELECT YOUR WINNERS
+          <br />
         </Text>
         <br /> <br /> <br />
       </Box>
-      {/*  <BracketForm formData={formState} onChange={handleFormChanged} /> */}
+      <Box
+        display="flex"
+        flexDirection="column"
+        width="100%"
+        mx="5%"
+        my="5%"
+        flexWrap="nowrap"
+      >
+        {/*  <Box display="flex" flexGrow="inherit">
+          {" "}
+          token is - {session.state.session?.id}
+        </Box> */}
+        <div> Your Table is - {session.state.session?.userTable}</div>
+        <div>Your Address is - {session.state.session?.address}</div>
+      </Box>
+      <BracketForm formData={formState} onChange={handleFormChanged} />
       <br /> <br /> <br />
       {/*   <PlayerWithNoSSR /> */}
     </div>

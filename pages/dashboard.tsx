@@ -4,7 +4,11 @@ import { Wallet } from "0xsequence";
 import { getWalletState } from "../components/Wallet";
 import { useRouter } from "next/router";
 import { Loading, Link } from "@nextui-org/react";
-import { getRowsfromTable, initializeTableLand } from "../components/lib/ops";
+import {
+  getRowsfromTable,
+  initializeTableLand,
+  loadJsonToIPFS,
+} from "../components/lib/ops";
 import { NetworkConfig } from "0xsequence/dist/declarations/src/network";
 import { Modal, Button, Text, Input } from "@nextui-org/react";
 import { ethers } from "ethers";
@@ -288,6 +292,18 @@ export default function Dashboard() {
             >
               Mint your bracket
             </Button>
+            <br />
+            <br />
+            {/*     <Button             //INITIAL TEAMS UPLOAD
+              disabled={false}
+              auto
+              shadow
+              onClick={() => {
+                loadJsonToIPFS();
+              }}
+            >
+              Load JSONS
+            </Button> */}
           </Box>
           <br /> <br />
           {loaded ? (

@@ -1,7 +1,14 @@
 import { connect, Connection, Token } from "@textile/tableland";
 import { getWalletState } from "../Wallet";
 import { create } from "ipfs-http-client";
-//import { teams } from "./data/teams";
+
+//   INITIAL DATA TO IPFS
+import { teamsA } from "./data/teams";
+import { teamsB } from "./data/teams";
+import { teamsC } from "./data/teams";
+import { teamsD } from "./data/teams";
+//   INITIAL DATA TO IPFS
+
 import {
   dataA,
   dataB,
@@ -22,10 +29,16 @@ const IPFS_CLIENT = create({
 });
 
 const templateA = dataA;
+const templateB = dataB;
+const templateC = dataC;
+const templateD = dataD;
 
-/* 
 // TO UPLOAD JSON TO IPFS FOR THE FIRST TIME
-const teamList = teams;   
+
+const teamListA = teamsA;
+const teamListB = teamsB;
+const teamListC = teamsC;
+const teamListD = teamsD;
 async function uploadMetadata(teamList) {
   try {
     const added = await IPFS_CLIENT.add(Buffer.from(JSON.stringify(teamList)), {
@@ -41,9 +54,16 @@ async function uploadMetadata(teamList) {
 }
 
 export async function loadJsonToIPFS() {
-  console.log("Loading Json");
-  const response = await uploadMetadata(teamList);
-} */
+  console.log("Loading Jsons");
+  const responseA = await uploadMetadata(teamListA);
+  console.log("responseA", responseA);
+  const responseB = await uploadMetadata(teamListB);
+  console.log("responseB", responseB);
+  const responseC = await uploadMetadata(teamListC);
+  console.log("responseC", responseC);
+  const responseD = await uploadMetadata(teamListD);
+  console.log("responseD", responseD);
+}
 
 export async function getDataFromIPFS(url) {
   const requestOptions = {
@@ -66,17 +86,49 @@ export async function getDataFromIPFS(url) {
 }
 
 export async function loadTeams() {
-  const dataFromIPFS = await getDataFromIPFS(process.env.URL_TEAMS_IPFS);
-  console.log("dataFromIPFS > ", dataFromIPFS);
+  ///////////////////////////////// LOADING TEAMS FROM IPFS ////////////////////////////////////////////////
+
+  const dataFromIPFSA = await getDataFromIPFS(process.env.TEAMSA_IPFS);
+  const dataFromIPFSB = await getDataFromIPFS(process.env.TEAMSB_IPFS);
+  const dataFromIPFSC = await getDataFromIPFS(process.env.TEAMSC_IPFS);
+  const dataFromIPFSD = await getDataFromIPFS(process.env.TEAMSD_IPFS);
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   templateA.forEach((res) => {
     res.participants.map((res) => {
-      dataFromIPFS.forEach((team) => {
+      dataFromIPFSA.forEach((team) => {
         if (team.id === parseInt(res.id))
           res.name = "ID " + res.id + " " + team.name;
       });
     });
   });
-  console.log("Data to render > ", templateA);
+  templateB.forEach((res) => {
+    res.participants.map((res) => {
+      dataFromIPFSB.forEach((team) => {
+        if (team.id === parseInt(res.id))
+          res.name = "ID " + res.id + " " + team.name;
+      });
+    });
+  });
+  templateC.forEach((res) => {
+    res.participants.map((res) => {
+      dataFromIPFSC.forEach((team) => {
+        if (team.id === parseInt(res.id))
+          res.name = "ID " + res.id + " " + team.name;
+      });
+    });
+  });
+  templateD.forEach((res) => {
+    res.participants.map((res) => {
+      dataFromIPFSD.forEach((team) => {
+        if (team.id === parseInt(res.id))
+          res.name = "ID " + res.id + " " + team.name;
+      });
+    });
+  });
+
+  console.log("Data to render > ", templateA, templateB, templateC, templateD);
 }
 
 export async function connectTableLand(): Promise<Connection> {

@@ -22,6 +22,10 @@ const Bracket = dynamic(
 );
 
 export default function CustomBracket(bracketId: any) {
+  const PlayerWithNoSSR = dynamic(() => import("../../components/Player2"), {
+    ssr: false,
+  });
+
   const data: BracketData = { form_data: {} };
   const [formState, setFormState] = useState(data.form_data);
   const handleFormChanged = (value: Record<string, string>) => {
@@ -29,7 +33,7 @@ export default function CustomBracket(bracketId: any) {
   };
 
   return (
-    <>
+    <div>
       <Box>
         <Bracket />
       </Box>
@@ -53,10 +57,10 @@ export default function CustomBracket(bracketId: any) {
         </Text>
         <br /> <br /> <br />
       </Box>
-      <BracketForm formData={formState} onChange={handleFormChanged} />
+      {/*  <BracketForm formData={formState} onChange={handleFormChanged} /> */}
       <br /> <br /> <br />
-      <Box height="100vh">MUSIC PLAYER </Box>
-    </>
+      {/*   <PlayerWithNoSSR /> */}
+    </div>
   );
 }
 

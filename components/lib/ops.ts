@@ -53,7 +53,8 @@ export async function getDataFromIPFS(url) {
     },
   };
 
-  const res = await fetch(url, requestOptions)
+  console.log("getDataFromIPFS url> ", url);
+  const res = fetch(url, requestOptions)
     .then((response) => {
       return response.json();
     })
@@ -66,7 +67,8 @@ export async function getDataFromIPFS(url) {
 }
 
 export async function loadTeams() {
-  const dataFromIPFS = await getDataFromIPFS(process.env.URL_TEAMS_IPFS);
+  console.log("INSIDE LOAD TEAMS ", process.env.TEAMSA_IPFS);
+  const dataFromIPFS = await getDataFromIPFS(process.env.TEAMSA_IPFS);
   console.log("dataFromIPFS > ", dataFromIPFS);
   templateA.forEach((res) => {
     res.participants.map((res) => {
